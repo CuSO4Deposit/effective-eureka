@@ -1,0 +1,283 @@
+Services WIP {
+    width: 2
+    "com.youtube" {
+        history
+        playlists
+        subscribes
+        uploads
+    }
+    "com.bilibili" {
+        playlists
+        subscribes
+        user-0 {
+            history
+            uploads
+        }
+        user-1 {
+            history
+            uploads
+        }
+    }
+    "com.163.music" {
+        playlists
+        subscribes
+    } 
+    "jp.nicovideo" {
+        history
+        playlists
+        subscribes
+    }
+    "fm.libre" {
+        history
+        current
+    }
+    "com.tencent.qq" {
+        chat history
+        contacts
+    }
+    "com.tencent.mm" {
+        chat history
+        contacts
+    }
+    "cn.feishu" {
+        chat history
+        contacts
+    }
+    "org.telegram" {
+        chat history
+        contacts
+    }
+    "com.discord" {
+        chat history
+        contacts
+    }
+    "com.fedibird.matrix" {
+        chat history
+        contacts
+    }
+    "com.taobao"
+    "com.jd"
+    "com.meituan"
+    "com.goofish"
+    "internal.me.shopping"
+    "org.disroot.mail"
+    "me.proton.mail"
+    "internal.work1.mail"
+    "com.github"
+    "org.codeberg"
+    "internal.work0.git"
+    "internal.work1.git"
+    "com.xbrowsersync"
+    "org.postimages"
+    "com.nmbxd1" {
+        cookies
+        subscribes
+        posts
+    }
+    "com.lowiro.arcaea" {
+        songlist
+    }
+    "com.rayark.cytus2" {
+        songlist
+        play record
+    }
+    "com.rayark.deemo" {
+        songlist
+        play record
+    }
+    "com.bang-dream" {
+        songlist
+        play record
+    }
+    "jp.sega.pjsekai" {
+        songlist
+        play record
+    }
+    "com.PigeonGames.Phigros" {
+        songlist
+        play record
+    }
+    "net.peropero.musedash" {
+        songlist
+        play record
+    }
+    "net.hajimeli.vividstasis" {
+        songlist
+        play record
+    }
+    "xyz.euclidia"
+    "internal.me.photos"
+}
+
+Services {
+    "com.163.music" {
+        history
+    } 
+    "internal.me.payments" {
+        BOC
+        ICBC
+        Paypal
+        AliPay
+        WeChat
+    }
+    "cc.fanbox.mea"
+    "com.lowiro.arcaea" {
+        play record
+    }
+    "org.terraria" {
+        worlds
+        players
+        footage
+    }
+    "net.minecraft" {
+        worlds
+        players
+        footage
+    }
+    "com.hempuli.baba"
+    "internal.game.theendlessempty" {
+        footage
+        saves
+    }
+    "internal.me.human" {
+        weight
+        sleep
+        step
+        heart rate
+    }
+    "internal.device" {
+        scale
+        band
+    }
+    "internal.me.text"
+
+    "internal.me.human".weight --> "internal.device".scale
+    "internal.me.human".sleep --> "internal.device".band
+    "internal.me.human".step --> "internal.device".band
+    "internal.me.human".heart rate --> "internal.device".band
+}
+
+DEL: Data Export Layer {
+    web-scrobbler {
+        link: https://github.com/web-scrobbler/web-scrobbler
+        shape: package
+    }
+    Accounting {
+        shape: person
+    }
+    Download Fanbox {
+        shape: person
+    }
+    Y-Offline {
+        shape: person
+    }
+    bili-uploader {
+        shape: person
+    }
+    duplicity {
+        shape: package
+    }
+    Export Scale Image {
+        shape: person
+    }
+    Sync On Edit (Git)
+    arcaea-song-database-maintainer {
+        shape: package
+    }
+}
+
+Data {
+    "fm.libre" {
+        link: https://libre.fm
+        shape: cloud
+    }
+    "beancount" {
+        # this shape means files 
+        shape: document
+    }
+    "fanbox" { 
+        shape: stored_data
+    }
+    "y_offline DB" {
+        shape: cylinder
+    }
+    "com.bilibili.user1" {
+        shape: cloud
+    }
+    "com.github" {
+        shape: cloud
+        logseq
+        ArcaeaSongDatabase {
+            link: https://github.com/CuSO4Deposit/ArcaeaSongDatabase
+        }
+    }
+    "internal.work1.JuiceFS"
+    "internal.device.phone2"
+    "internal.node.lexikos.filesystem" {
+        ArcaeaSongDatabase
+    }
+
+    "internal.node.lexikos.filesystem".ArcaeaSongDatabase --> "com.github".ArcaeaSongDatabase : {
+        label: git push
+    }
+}
+
+DAL: Data Access Layer {
+    Beancount {
+        link: https://github.com/beancount/beancount
+        shape: package
+    }
+    Y-Offline {
+        shape: package
+    }
+    LogSeq {
+        link: https://logseq.com
+        shape: package
+    }
+}
+
+Applications {
+    Fava {
+        link: https://github.com/beancount/fava
+        shape: cloud
+    }
+}
+
+Services WIP --> Services
+
+Services."com.163.music".history --> DEL.web-scrobbler
+DEL.web-scrobbler --> Data."fm.libre"
+
+Services."internal.me.payments" --> DEL.Accounting
+DEL.Accounting --> Data."beancount"
+Data."beancount" --> DAL.Beancount
+DAL.Beancount --> Applications.Fava
+
+Services."cc.fanbox.mea" --> DEL.Download Fanbox
+DEL.Download Fanbox --> Data.fanbox
+
+Services."com.lowiro.arcaea".play record --> DEL.Y-Offline
+DEL.Y-Offline --> Data."y_offline DB"
+Data."y_offline DB" --> DAL.Y-Offline
+Services."com.lowiro.arcaea".songlist --> DEL.arcaea-song-database-maintainer: {
+    label: relies on wiki.arcaea.cn
+}
+DEL.arcaea-song-database-maintainer --> Data."internal.node.lexikos.filesystem".ArcaeaSongDatabase : {
+    label: manually run script
+}
+
+Services."org.terraria".footage --> DEL.bili-uploader
+Services."net.minecraft".footage --> DEL.bili-uploader
+Services."com.hempuli.baba" --> DEL.bili-uploader
+Services."internal.game.theendlessempty".footage --> DEL.bili-uploader
+DEL.bili-uploader --> Data."com.bilibili.user1"
+
+Services."net.minecraft".worlds --> DEL.duplicity
+DEL.duplicity --> Data."internal.work1.JuiceFS"
+
+Services."internal.device".scale --> DEL."Export Scale Image"
+DEL."Export Scale Image" --> Data."internal.device.phone2"
+
+Services."internal.me.text" --> DEL."Sync On Edit (Git)"
+DEL."Sync On Edit (Git)" --> Data."com.github".logseq
+Data."com.github".logseq --> DAL.LogSeq
