@@ -2,13 +2,9 @@ Services WIP {
     "com.bilibili" {
         playlists
         subscribes
-        user-0 {
-            history
-            uploads
-        }
+        history
         user-1 {
-            history
-            uploads
+            uploads metadata
         }
     }
     "com.nmbxd1" {
@@ -261,6 +257,7 @@ DEL: Data Export Layer {
     }
     duplicity {
         shape: package
+        link: https://duplicity.gitlab.io/
     }
     Export Scale Image {
         shape: person
@@ -283,14 +280,19 @@ Data {
         # this shape means files 
         shape: document
     }
-    "internal.node.lexikos.filesystem".fanbox { 
-        shape: stored_data
-    }
-    "y_offline DB" {
-        shape: cylinder
+    "internal.node.lexikos.filesystem" {
+        fanbox { 
+            shape: stored_data
+        }
+        "Y-Offline DB" {
+            shape: cylinder
+        }
     }
     "com.bilibili.user-1" {
         shape: cloud
+        uploads {
+            shape: stored_data
+        }
     }
     "com.github" {
         shape: cloud
@@ -300,7 +302,9 @@ Data {
         logseq
     }
     "internal.work-1.JuiceFS" {
-        duplicity
+        duplicity {
+            shape: stored_data
+        }
     }
     "internal.device.phone-2.filesystem" {
         scale info pictures
@@ -313,8 +317,12 @@ Data {
         label: git push
     }
     "internal.node.laborari.filesystem".Takeout {
-        youtube
-        mail
+        youtube {
+            shape: stored_data
+        }
+        mail {
+            shape: stored_data
+        }
     }
 }
 
@@ -330,10 +338,14 @@ DAL: Data Access Layer {
         link: https://logseq.com
         shape: package
     }
+    duplicity {
+        shape: package
+        link: https://duplicity.gitlab.io/
+    }
 }
 
 Applications {
-    Fava {
+    Fava Web {
         link: https://github.com/beancount/fava
         shape: cloud
     }
@@ -355,14 +367,14 @@ DEL.web-scrobbler --> Data."fm.libre"
 Services."internal.me.payments" --> DEL.Accounting
 DEL.Accounting --> Data."beancount"
 Data."beancount" --> DAL.Beancount
-DAL.Beancount --> Applications.Fava
+DAL.Beancount --> Applications.Fava Web
 
 Services."cc.fanbox.mea" --> DEL.Download Fanbox
 DEL.Download Fanbox --> Data."internal.node.lexikos.filesystem".fanbox
 
 Services."com.lowiro.arcaea".play record --> DEL.Y-Offline
-DEL.Y-Offline --> Data."y_offline DB"
-Data."y_offline DB" --> DAL.Y-Offline
+DEL.Y-Offline --> Data."internal.node.lexikos.filesystem".Y-Offline DB
+Data."internal.node.lexikos.filesystem"."Y-Offline DB" --> DAL.Y-Offline
 Data."internal.node.lexikos.filesystem".ArcaeaSongDatabase --> DAL.Y-Offline
 DAL.Y-Offline --> Applications.Y-Offline CLI
 
@@ -381,10 +393,11 @@ Services."org.terraria".footage --> DEL.bili-uploader
 Services."net.minecraft".footage --> DEL.bili-uploader
 Services."com.hempuli.baba" --> DEL.bili-uploader
 Services."internal.game.theendlessempty".footage --> DEL.bili-uploader
-DEL.bili-uploader --> Data."com.bilibili.user-1"
+DEL.bili-uploader --> Data."com.bilibili.user-1".uploads
 
 Services."net.minecraft".worlds --> DEL.duplicity
 DEL.duplicity --> Data."internal.work-1.JuiceFS".duplicity
+Data."internal.work-1.JuiceFS".duplicity --> DAL.duplicity
 
 Services."internal.device".scale --> DEL."Export Scale Image"
 DEL."Export Scale Image" --> Data."internal.device.phone-2.filesystem".scale info pictures
