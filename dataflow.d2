@@ -1,11 +1,4 @@
 Services WIP {
-    width: 2
-    "com.youtube" {
-        history
-        playlists
-        subscribes
-        uploads
-    }
     "com.bilibili" {
         playlists
         subscribes
@@ -18,6 +11,16 @@ Services WIP {
             uploads
         }
     }
+    "com.nmbxd1" {
+        cookies
+        subscribes
+        posts
+    }
+
+    "com.bilibili" --> "com.nmbxd1" {
+        style.opacity: 0
+    }
+
     "com.163.music" {
         playlists
         subscribes
@@ -31,6 +34,14 @@ Services WIP {
         history
         current
     }
+
+    "com.163.music" --> "jp.nicovideo" {
+        style.opacity: 0
+    }
+    "jp.nicovideo" --> "fm.libre" {
+        style.opacity: 0
+    }
+
     "com.tencent.qq" {
         chat history
         contacts
@@ -55,28 +66,70 @@ Services WIP {
         chat history
         contacts
     }
+
+    "com.tencent.qq" --> "com.tencent.mm" {
+        style.opacity: 0
+    }
+    "com.tencent.mm" --> "cn.feishu" {
+        style.opacity: 0
+    }
+    "org.telegram" --> "com.discord" {
+        style.opacity: 0
+    }
+    "com.discord" --> "com.fedibird.matrix" {
+        style.opacity: 0
+    }
+
     "com.taobao"
     "com.jd"
     "com.meituan"
     "com.goofish"
     "internal.me.shopping"
+
+    "com.taobao" --> "com.jd" {
+        style.opacity: 0
+    }
+    "com.jd" --> "com.meituan" {
+        style.opacity: 0
+    }
+    "com.goofish" --> "internal.me.shopping" {
+        style.opacity: 0
+    }
+
     "org.disroot.mail"
     "me.proton.mail"
-    "internal.work1.mail"
+    "internal.work0.mail"
+
+    "org.disroot.mail" --> "me.proton.mail" {
+        style.opacity: 0
+    }
+    "me.proton.mail" --> "internal.work0.mail" {
+        style.opacity: 0
+    }
+
     "com.github"
     "org.codeberg"
     "internal.work0.git"
     "internal.work1.git"
-    "com.xbrowsersync"
+
+    "com.github" --> "org.codeberg" {
+        style.opacity: 0
+    }
+    "internal.work0.git" --> "internal.work1.git" {
+        style.opacity: 0
+    }
+
     "org.postimages"
-    "com.nmbxd1" {
-        cookies
-        subscribes
-        posts
+    "internal.me.photos"
+    "com.google.gemini"
+
+    "org.postimages" --> "internal.me.photos" {
+        style.opacity: 0
     }
-    "com.lowiro.arcaea" {
-        songlist
+    "internal.me.photos" --> "com.google.gemini" {
+        style.opacity: 0
     }
+
     "com.rayark.cytus2" {
         songlist
         play record
@@ -106,7 +159,23 @@ Services WIP {
         play record
     }
     "xyz.euclidia"
-    "internal.me.photos"
+
+    "com.rayark.cytus2" --> "com.rayark.deemo" {
+        style.opacity: 0
+    }
+    "com.rayark.deemo" --> "com.bang-dream" {
+        style.opacity: 0
+    }
+    "jp.sega.pjsekai" --> "com.PigeonGames.Phigros" {
+        style.opacity: 0
+    }
+    "com.PigeonGames.Phigros" --> "net.peropero.musedash" {
+        style.opacity: 0
+    }
+    "net.hajimeli.vividstasis" --> "xyz.euclidia" {
+        style.opacity: 0
+    }
+
 }
 
 Services {
@@ -121,8 +190,17 @@ Services {
         WeChat
     }
     "cc.fanbox.mea"
+    "cn.arcaea.wiki" {
+        shape: cloud
+    }
     "com.lowiro.arcaea" {
         play record
+        songlist
+    }
+    "com.hempuli.baba"
+    "internal.game.theendlessempty" {
+        footage
+        saves
     }
     "org.terraria" {
         worlds
@@ -130,14 +208,9 @@ Services {
         footage
     }
     "net.minecraft" {
-        worlds
         players
         footage
-    }
-    "com.hempuli.baba"
-    "internal.game.theendlessempty" {
-        footage
-        saves
+        worlds
     }
     "internal.me.human" {
         weight
@@ -151,10 +224,19 @@ Services {
     }
     "internal.me.text"
 
+    "com.youtube" {
+        history
+        playlists
+        subscribes
+        uploads
+    }
+    "com.google.mail"
+
     "internal.me.human".weight --> "internal.device".scale
     "internal.me.human".sleep --> "internal.device".band
     "internal.me.human".step --> "internal.device".band
     "internal.me.human".heart rate --> "internal.device".band
+    "com.lowiro.arcaea".songlist --> "cn.arcaea.wiki"
 }
 
 DEL: Data Export Layer {
@@ -171,6 +253,9 @@ DEL: Data Export Layer {
     Y-Offline {
         shape: person
     }
+    arcaea-song-database-maintainer {
+        shape: package
+    }
     bili-uploader {
         shape: person
     }
@@ -181,8 +266,11 @@ DEL: Data Export Layer {
         shape: person
     }
     Sync On Edit (Git)
-    arcaea-song-database-maintainer {
-        shape: package
+    Google Takeout {
+        shape: person
+        tooltip: once per 2 months, manually download
+        youtube
+        mail
     }
 }
 
@@ -195,7 +283,7 @@ Data {
         # this shape means files 
         shape: document
     }
-    "fanbox" { 
+    "internal.node.lexikos.filesystem".fanbox { 
         shape: stored_data
     }
     "y_offline DB" {
@@ -206,19 +294,27 @@ Data {
     }
     "com.github" {
         shape: cloud
-        logseq
         ArcaeaSongDatabase {
             link: https://github.com/CuSO4Deposit/ArcaeaSongDatabase
         }
+        logseq
     }
-    "internal.work1.JuiceFS"
-    "internal.device.phone2"
+    "internal.work1.JuiceFS" {
+        duplicity
+    }
+    "internal.device.phone2.filesystem" {
+        scale info pictures
+    }
     "internal.node.lexikos.filesystem" {
         ArcaeaSongDatabase
     }
 
     "internal.node.lexikos.filesystem".ArcaeaSongDatabase --> "com.github".ArcaeaSongDatabase : {
         label: git push
+    }
+    "internal.node.laborari.filesystem".Takeout {
+        youtube
+        mail
     }
 }
 
@@ -241,9 +337,17 @@ Applications {
         link: https://github.com/beancount/fava
         shape: cloud
     }
+    Y-Offline CLI {
+        shape: package
+    }
+    LogSeq {
+        shape: package
+    }
 }
 
-Services WIP --> Services
+Services WIP --> Services {
+    style.opacity: 0
+}
 
 Services."com.163.music".history --> DEL.web-scrobbler
 DEL.web-scrobbler --> Data."fm.libre"
@@ -254,17 +358,24 @@ Data."beancount" --> DAL.Beancount
 DAL.Beancount --> Applications.Fava
 
 Services."cc.fanbox.mea" --> DEL.Download Fanbox
-DEL.Download Fanbox --> Data.fanbox
+DEL.Download Fanbox --> Data."internal.node.lexikos.filesystem".fanbox
 
 Services."com.lowiro.arcaea".play record --> DEL.Y-Offline
 DEL.Y-Offline --> Data."y_offline DB"
 Data."y_offline DB" --> DAL.Y-Offline
-Services."com.lowiro.arcaea".songlist --> DEL.arcaea-song-database-maintainer: {
-    label: relies on wiki.arcaea.cn
-}
+Data."internal.node.lexikos.filesystem".ArcaeaSongDatabase --> DAL.Y-Offline
+DAL.Y-Offline --> Applications.Y-Offline CLI
+
+Services."cn.arcaea.wiki" --> DEL.arcaea-song-database-maintainer
 DEL.arcaea-song-database-maintainer --> Data."internal.node.lexikos.filesystem".ArcaeaSongDatabase : {
     label: manually run script
 }
+
+Services."com.youtube" --> DEL.Google Takeout.youtube
+DEL.Google Takeout.youtube --> Data."internal.node.laborari.filesystem".Takeout.youtube
+
+Services."com.google.mail" --> DEL.Google Takeout.mail
+DEL.Google Takeout.mail --> Data."internal.node.laborari.filesystem".Takeout.mail
 
 Services."org.terraria".footage --> DEL.bili-uploader
 Services."net.minecraft".footage --> DEL.bili-uploader
@@ -273,11 +384,12 @@ Services."internal.game.theendlessempty".footage --> DEL.bili-uploader
 DEL.bili-uploader --> Data."com.bilibili.user1"
 
 Services."net.minecraft".worlds --> DEL.duplicity
-DEL.duplicity --> Data."internal.work1.JuiceFS"
+DEL.duplicity --> Data."internal.work1.JuiceFS".duplicity
 
 Services."internal.device".scale --> DEL."Export Scale Image"
-DEL."Export Scale Image" --> Data."internal.device.phone2"
+DEL."Export Scale Image" --> Data."internal.device.phone2.filesystem".scale info pictures
 
 Services."internal.me.text" --> DEL."Sync On Edit (Git)"
 DEL."Sync On Edit (Git)" --> Data."com.github".logseq
 Data."com.github".logseq --> DAL.LogSeq
+DAL.LogSeq --> Applications.LogSeq
