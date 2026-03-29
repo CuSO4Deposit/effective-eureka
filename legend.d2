@@ -1,0 +1,53 @@
+Legend {
+    "Cloud Service" {
+        shape: cloud
+    }
+    "Local File" {
+        shape: stored_data
+    }
+    "Database" {
+        shape: cylinder
+    }
+    "Document" {
+        shape: document
+    }
+    "Package / Tool" {
+        shape: package
+    }
+    "Manual Process" {
+        shape: person
+    }
+    "Data with Backup (xN = N copies)": "Data with Backup (xN = N copies)" {
+        shape: stored_data
+    }
+
+    "Cloud Service" --> "Local File" {
+        style.opacity: 0
+    }
+    "Local File" --> "Database" {
+        style.opacity: 0
+    }
+    "Database" --> "Document" {
+        style.opacity: 0
+    }
+    "Package / Tool" --> "Manual Process" {
+        style.opacity: 0
+    }
+    "Manual Process" --> "Data with Backup (xN = N copies)" {
+        style.opacity: 0
+    }
+
+    Edges {
+        A --> B: data flow
+        C --> D: same data in upper layer {
+            style.stroke-dash: 3
+        }
+
+        A --> C {
+            style.opacity: 0
+        }
+        B --> D {
+            style.opacity: 0
+        }
+    }
+}

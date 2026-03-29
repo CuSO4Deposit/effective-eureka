@@ -1,40 +1,21 @@
 Services WIP {
-    "com.bilibili" {
-        playlists
-        subscribes
-        history
-        user-1 {
-            uploads metadata
-        }
-    }
     "com.nmbxd1" {
         cookies
         subscribes
         posts
     }
 
-    "com.bilibili" --> "com.nmbxd1" {
-        style.opacity: 0
-    }
-
     "com.163.music" {
         playlists
         subscribes
-    } 
+    }
     "jp.nicovideo" {
         history
         playlists
         subscribes
     }
-    "fm.libre" {
-        history
-        current
-    }
 
     "com.163.music" --> "jp.nicovideo" {
-        style.opacity: 0
-    }
-    "jp.nicovideo" --> "fm.libre" {
         style.opacity: 0
     }
 
@@ -103,14 +84,9 @@ Services WIP {
         style.opacity: 0
     }
 
-    "com.github"
-    "org.codeberg"
     "internal.work-0.git"
     "internal.work-1.git"
 
-    "com.github" --> "org.codeberg" {
-        style.opacity: 0
-    }
     "internal.work-0.git" --> "internal.work-1.git" {
         style.opacity: 0
     }
@@ -175,9 +151,23 @@ Services WIP {
 }
 
 Services {
+    "com.bilibili" {
+        playlists
+        subscribes
+        history
+        user-1 {
+            uploads metadata
+        }
+    }
+    "fm.libre" {
+        history
+        current
+    }
+    "com.github"
+    "org.codeberg"
     "com.163.music" {
         history
-    } 
+    }
     "internal.me.payments" {
         BOC
         ICBC
@@ -185,7 +175,9 @@ Services {
         AliPay
         WeChat
     }
-    "cc.fanbox.mea"
+    "cc.fanbox.mea": "cc.fanbox.mea (x2)" {
+        shape: stored_data
+    }
     "cn.arcaea.wiki" {
         shape: cloud
     }
@@ -196,17 +188,27 @@ Services {
     "com.hempuli.baba"
     "internal.game.theendlessempty" {
         footage
-        saves
+        saves {
+            shape: stored_data
+        }
     }
     "org.terraria" {
         footage
-        worlds
-        players
+        worlds: "worlds (x2)" {
+            shape: stored_data
+        }
+        players: "players (x2)" {
+            shape: stored_data
+        }
     }
     "net.minecraft" {
-        players
+        players: "players (x2)" {
+            shape: stored_data
+        }
         footage
-        worlds
+        worlds: "worlds (x2)" {
+            shape: stored_data
+        }
     }
     "internal.me.human" {
         weight
@@ -218,7 +220,9 @@ Services {
         scale
         band
     }
-    "internal.me.text"
+    "internal.me.text": "internal.me.text (x2)" {
+        shape: stored_data
+    }
 
     "com.youtube" {
         history
@@ -250,7 +254,10 @@ DEL: Data Export Layer {
         shape: person
     }
     arcaea-database-maintainer {
-        shape: package
+        shape: person
+        arcaea-database-maintainer {
+            shape: package
+        }
     }
     bili-uploader {
         shape: person
@@ -278,12 +285,11 @@ Data {
         link: https://libre.fm
         shape: cloud
     }
-    "beancount" {
-        # this shape means files 
-        shape: document
+    "beancount": "beancount (x2)" {
+        shape: stored_data
     }
     "internal.node.lexikos.filesystem" {
-        fanbox { 
+        fanbox: "fanbox (x2)" {
             shape: stored_data
         }
         "Y-Offline DB" {
@@ -298,10 +304,11 @@ Data {
     }
     "com.github" {
         shape: cloud
-        ArcaeaSongDatabase {
+        ArcaeaSongDatabase: "ArcaeaSongDatabase (x2)" {
             link: https://github.com/CuSO4Deposit/ArcaeaSongDatabase
         }
-        logseq
+        logseq: "logseq (x2)"
+        beancount: "beancount (x2)"
     }
     "internal.work-1.JuiceFS" {
         duplicity {
@@ -312,10 +319,13 @@ Data {
         scale info pictures
     }
     "internal.node.lexikos.filesystem" {
-        ArcaeaSongDatabase
+        ArcaeaSongDatabase: "ArcaeaSongDatabase (x2)"
     }
 
     "internal.node.lexikos.filesystem".ArcaeaSongDatabase --> "com.github".ArcaeaSongDatabase : {
+        label: git push
+    }
+    "beancount" --> "com.github".beancount : {
         label: git push
     }
     "internal.node.laborari.filesystem".Takeout {
@@ -400,6 +410,7 @@ DEL.bili-uploader --> Data."com.bilibili.user-1".uploads
 Services."net.minecraft".players --> DEL.duplicity.lexikos
 Services."org.terraria".worlds --> DEL.duplicity.lexikos
 Services."org.terraria".players --> DEL.duplicity.lexikos
+Data."internal.node.lexikos.filesystem".fanbox --> DEL.duplicity.lexikos
 DEL.duplicity.lexikos --> Data."internal.work-1.JuiceFS".duplicity
 
 Services."net.minecraft".worlds --> DEL.duplicity.proximo
@@ -413,3 +424,17 @@ Services."internal.me.text" --> DEL."Sync On Edit (Git)"
 DEL."Sync On Edit (Git)" --> Data."com.github".logseq
 Data."com.github".logseq --> DAL.LogSeq
 DAL.LogSeq --> Applications.LogSeq
+
+# Same data appearing in both Data and Services layers
+Services."fm.libre" --> Data."fm.libre" {
+    style.stroke-dash: 3
+}
+Services."com.bilibili".user-1 --> Data."com.bilibili.user-1" {
+    style.stroke-dash: 3
+}
+Services."com.github" --> Data."com.github" {
+    style.stroke-dash: 3
+}
+Services."org.codeberg" --> Data."com.github" {
+    style.stroke-dash: 3
+}
