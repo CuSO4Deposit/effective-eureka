@@ -199,9 +199,9 @@ Services {
         saves
     }
     "org.terraria" {
+        footage
         worlds
         players
-        footage
     }
     "net.minecraft" {
         players
@@ -258,6 +258,8 @@ DEL: Data Export Layer {
     duplicity {
         shape: package
         link: https://duplicity.gitlab.io/
+        lexikos
+        proximo
     }
     Export Scale Image {
         shape: person
@@ -395,8 +397,13 @@ Services."com.hempuli.baba" --> DEL.bili-uploader
 Services."internal.game.theendlessempty".footage --> DEL.bili-uploader
 DEL.bili-uploader --> Data."com.bilibili.user-1".uploads
 
-Services."net.minecraft".worlds --> DEL.duplicity
-DEL.duplicity --> Data."internal.work-1.JuiceFS".duplicity
+Services."net.minecraft".players --> DEL.duplicity.lexikos
+Services."org.terraria".worlds --> DEL.duplicity.lexikos
+Services."org.terraria".players --> DEL.duplicity.lexikos
+DEL.duplicity.lexikos --> Data."internal.work-1.JuiceFS".duplicity
+
+Services."net.minecraft".worlds --> DEL.duplicity.proximo
+DEL.duplicity.proximo --> Data."internal.work-1.JuiceFS".duplicity
 Data."internal.work-1.JuiceFS".duplicity --> DAL.duplicity
 
 Services."internal.device".scale --> DEL."Export Scale Image"
