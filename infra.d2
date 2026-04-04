@@ -61,7 +61,7 @@ Services WIP {
     "com.jd"
     "com.meituan"
     "com.goofish"
-    "internal.me.shopping"
+    "invalid.me.shopping"
 
     "com.taobao" --> "com.jd" {
         style.opacity: 0
@@ -69,36 +69,31 @@ Services WIP {
     "com.jd" --> "com.meituan" {
         style.opacity: 0
     }
-    "com.goofish" --> "internal.me.shopping" {
+    "com.goofish" --> "invalid.me.shopping" {
         style.opacity: 0
     }
 
     "org.disroot.mail"
     "me.proton.mail"
-    "internal.work-0.mail"
+    "invalid.work-0.mail"
 
     "org.disroot.mail" --> "me.proton.mail" {
         style.opacity: 0
     }
-    "me.proton.mail" --> "internal.work-0.mail" {
+    "me.proton.mail" --> "invalid.work-0.mail" {
         style.opacity: 0
     }
 
-    "internal.work-0.git"
-    "internal.work-1.git"
-
-    "internal.work-0.git" --> "internal.work-1.git" {
-        style.opacity: 0
-    }
+    "invalid.work-1.git"
 
     "org.postimages"
-    "internal.me.photos"
+    "invalid.me.photos"
     "com.google.gemini"
 
-    "org.postimages" --> "internal.me.photos" {
+    "org.postimages" --> "invalid.me.photos" {
         style.opacity: 0
     }
-    "internal.me.photos" --> "com.google.gemini" {
+    "invalid.me.photos" --> "com.google.gemini" {
         style.opacity: 0
     }
 
@@ -163,12 +158,16 @@ Services {
         history
         current
     }
-    "com.github"
+    "com.github" {
+        user-0
+        user-1
+    }
     "org.codeberg"
+    "invalid.work-0.git"
     "com.163.music" {
         history
     }
-    "internal.me.payments" {
+    "invalid.me.payments" {
         BOC
         ICBC
         Paypal
@@ -186,7 +185,7 @@ Services {
         songlist
     }
     "com.hempuli.baba"
-    "internal.game.theendlessempty" {
+    "invalid.game.theendlessempty" {
         footage
         saves {
             shape: stored_data
@@ -210,17 +209,17 @@ Services {
             shape: stored_data
         }
     }
-    "internal.me.human" {
+    "invalid.me.human" {
         weight
         sleep
         step
         heart rate
     }
-    "internal.device" {
+    "invalid.device" {
         scale
         band
     }
-    "internal.me.text": "internal.me.text (x2)" {
+    "invalid.me.text": "invalid.me.text (x2)" {
         shape: stored_data
     }
 
@@ -232,10 +231,10 @@ Services {
     }
     "com.google.mail"
 
-    "internal.me.human".weight --> "internal.device".scale
-    "internal.me.human".sleep --> "internal.device".band
-    "internal.me.human".step --> "internal.device".band
-    "internal.me.human".heart rate --> "internal.device".band
+    "invalid.me.human".weight --> "invalid.device".scale
+    "invalid.me.human".sleep --> "invalid.device".band
+    "invalid.me.human".step --> "invalid.device".band
+    "invalid.me.human".heart rate --> "invalid.device".band
     "com.lowiro.arcaea".songlist --> "cn.arcaea.wiki"
 }
 
@@ -268,6 +267,10 @@ DEL: Data Export Layer {
         lexikos
         proximo
     }
+    ghorg {
+        shape: package
+        link: https://github.com/gabrie30/ghorg
+    }
     Export Scale Image {
         shape: person
     }
@@ -288,7 +291,7 @@ Data {
     "beancount": "beancount (x2)" {
         shape: stored_data
     }
-    "internal.node.lexikos.filesystem" {
+    "invalid.node.lexikos.filesystem" {
         fanbox: "fanbox (x2)" {
             shape: stored_data
         }
@@ -310,25 +313,30 @@ Data {
         logseq: "logseq (x2)"
         beancount: "beancount (x2)"
     }
-    "internal.work-1.JuiceFS" {
+    "invalid.work-1.JuiceFS" {
         duplicity {
             shape: stored_data
         }
     }
-    "internal.device.phone-2.filesystem" {
+    "invalid.device.phone-2.filesystem" {
         scale info pictures
     }
-    "internal.node.lexikos.filesystem" {
+    "invalid.node.proximo.filesystem" {
+        ghorg {
+            shape: stored_data
+        }
+    }
+    "invalid.node.lexikos.filesystem" {
         ArcaeaSongDatabase: "ArcaeaSongDatabase (x2)"
     }
 
-    "internal.node.lexikos.filesystem".ArcaeaSongDatabase --> "com.github".ArcaeaSongDatabase : {
+    "invalid.node.lexikos.filesystem".ArcaeaSongDatabase --> "com.github".ArcaeaSongDatabase : {
         label: git push
     }
     "beancount" --> "com.github".beancount : {
         label: git push
     }
-    "internal.node.laborari.filesystem".Takeout {
+    "invalid.node.laborari.filesystem".Takeout {
         youtube {
             shape: stored_data
         }
@@ -354,18 +362,28 @@ DAL: Data Access Layer {
         shape: package
         link: https://duplicity.gitlab.io/
     }
+    cgit {
+        shape: package
+        link: https://git.zx2c4.com/cgit/about/
+    }
 }
 
 Applications {
     Fava Web {
-        link: https://github.com/beancount/fava
+        link: http://fava.internal
         shape: cloud
     }
-    Y-Offline CLI {
+    Y-Offline {
+        link: https://y-offline.depoze.xyz
         shape: package
+
     }
     LogSeq {
         shape: package
+    }
+    "internal.git-ro" {
+        link: http://git-ro.internal
+        shape: cloud
     }
 }
 
@@ -376,51 +394,59 @@ Services WIP --> Services {
 Services."com.163.music".history --> DEL.web-scrobbler
 DEL.web-scrobbler --> Data."fm.libre"
 
-Services."internal.me.payments" --> DEL.Accounting
+Services."invalid.me.payments" --> DEL.Accounting
 DEL.Accounting --> Data."beancount"
 Data."beancount" --> DAL.Beancount
 DAL.Beancount --> Applications.Fava Web
 
 Services."cc.fanbox.mea" --> DEL.Download Fanbox
-DEL.Download Fanbox --> Data."internal.node.lexikos.filesystem".fanbox
+DEL.Download Fanbox --> Data."invalid.node.lexikos.filesystem".fanbox
+DEL.Download Fanbox --> Data."invalid.work-1.JuiceFS".duplicity : {
+    label: duplicity
+}
 
 Services."com.lowiro.arcaea".play record --> DEL.Y-Offline
-DEL.Y-Offline --> Data."internal.node.lexikos.filesystem".Y-Offline DB
-Data."internal.node.lexikos.filesystem"."Y-Offline DB" --> DAL.Y-Offline
-Data."internal.node.lexikos.filesystem".ArcaeaSongDatabase --> DAL.Y-Offline
-DAL.Y-Offline --> Applications.Y-Offline CLI
+DEL.Y-Offline --> Data."invalid.node.lexikos.filesystem".Y-Offline DB
+Data."invalid.node.lexikos.filesystem"."Y-Offline DB" --> DAL.Y-Offline
+Data."invalid.node.lexikos.filesystem".ArcaeaSongDatabase --> DAL.Y-Offline
+DAL.Y-Offline --> Applications.Y-Offline
 
 Services."cn.arcaea.wiki" --> DEL.arcaea-database-maintainer
-DEL.arcaea-database-maintainer --> Data."internal.node.lexikos.filesystem".ArcaeaSongDatabase : {
+DEL.arcaea-database-maintainer --> Data."invalid.node.lexikos.filesystem".ArcaeaSongDatabase : {
     label: manually run script
 }
 
 Services."com.youtube" --> DEL.Google Takeout.youtube
-DEL.Google Takeout.youtube --> Data."internal.node.laborari.filesystem".Takeout.youtube
+DEL.Google Takeout.youtube --> Data."invalid.node.laborari.filesystem".Takeout.youtube
 
 Services."com.google.mail" --> DEL.Google Takeout.mail
-DEL.Google Takeout.mail --> Data."internal.node.laborari.filesystem".Takeout.mail
+DEL.Google Takeout.mail --> Data."invalid.node.laborari.filesystem".Takeout.mail
 
 Services."org.terraria".footage --> DEL.bili-uploader
 Services."net.minecraft".footage --> DEL.bili-uploader
 Services."com.hempuli.baba" --> DEL.bili-uploader
-Services."internal.game.theendlessempty".footage --> DEL.bili-uploader
+Services."invalid.game.theendlessempty".footage --> DEL.bili-uploader
 DEL.bili-uploader --> Data."com.bilibili.user-1".uploads
 
 Services."net.minecraft".players --> DEL.duplicity.lexikos
 Services."org.terraria".worlds --> DEL.duplicity.lexikos
 Services."org.terraria".players --> DEL.duplicity.lexikos
-Data."internal.node.lexikos.filesystem".fanbox --> DEL.duplicity.lexikos
-DEL.duplicity.lexikos --> Data."internal.work-1.JuiceFS".duplicity
+DEL.duplicity.lexikos --> Data."invalid.work-1.JuiceFS".duplicity
 
 Services."net.minecraft".worlds --> DEL.duplicity.proximo
-DEL.duplicity.proximo --> Data."internal.work-1.JuiceFS".duplicity
-Data."internal.work-1.JuiceFS".duplicity --> DAL.duplicity
+DEL.duplicity.proximo --> Data."invalid.work-1.JuiceFS".duplicity
+Data."invalid.work-1.JuiceFS".duplicity --> DAL.duplicity
 
-Services."internal.device".scale --> DEL."Export Scale Image"
-DEL."Export Scale Image" --> Data."internal.device.phone-2.filesystem".scale info pictures
+Services."com.github" --> DEL.ghorg
+Services."invalid.work-0.git" --> DEL.ghorg
+DEL.ghorg --> Data."invalid.node.proximo.filesystem".ghorg
+Data."invalid.node.proximo.filesystem".ghorg --> DAL.cgit
+DAL.cgit --> Applications."internal.git-ro"
 
-Services."internal.me.text" --> DEL."Sync On Edit (Git)"
+Services."invalid.device".scale --> DEL."Export Scale Image"
+DEL."Export Scale Image" --> Data."invalid.device.phone-2.filesystem".scale info pictures
+
+Services."invalid.me.text" --> DEL."Sync On Edit (Git)"
 DEL."Sync On Edit (Git)" --> Data."com.github".logseq
 Data."com.github".logseq --> DAL.LogSeq
 DAL.LogSeq --> Applications.LogSeq
