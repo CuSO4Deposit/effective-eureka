@@ -50,5 +50,4 @@ Invisible edges (`style.opacity: 0`) are used within containers to control layou
 
 - `stored_data` shape in Services marks data that lives on local disk (not a remote service)
 - `(xN)` suffix on a data node label indicates N copies of that data exist across different locations (both ends should be labeled)
-- Dashed edges (`style.stroke-dash: 3`) from Data to Services WIP indicate the same data appearing in both layers (awaiting further extraction)
 - `legend.d2` contains the visual legend for all shapes and edge styles

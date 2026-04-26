@@ -450,17 +450,3 @@ Services."invalid.me.text" --> DEL."Sync On Edit (Git)"
 DEL."Sync On Edit (Git)" --> Data."com.github".logseq
 Data."com.github".logseq --> DAL.LogSeq
 DAL.LogSeq --> Applications.LogSeq
-
-# Same data appearing in both Data and Services layers
-Services."fm.libre" --> Data."fm.libre" {
-    style.stroke-dash: 3
-}
-Services."com.bilibili".user-1 --> Data."com.bilibili.user-1" {
-    style.stroke-dash: 3
-}
-Services."com.github" --> Data."com.github" {
-    style.stroke-dash: 3
-}
-Services."org.codeberg" --> Data."com.github" {
-    style.stroke-dash: 3
-}
