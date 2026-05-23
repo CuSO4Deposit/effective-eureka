@@ -87,13 +87,8 @@ Services WIP {
     "invalid.work-1.git"
 
     "org.postimages"
-    "invalid.me.photos"
-    "com.google.gemini"
 
     "org.postimages" --> "invalid.me.photos" {
-        style.opacity: 0
-    }
-    "invalid.me.photos" --> "com.google.gemini" {
         style.opacity: 0
     }
 
@@ -236,6 +231,7 @@ Services {
     "invalid.me.human".step --> "invalid.device".band
     "invalid.me.human".heart rate --> "invalid.device".band
     "com.lowiro.arcaea".songlist --> "cn.arcaea.wiki"
+    "invalid.me.photos"
 }
 
 DEL: Data Export Layer {
@@ -281,6 +277,9 @@ DEL: Data Export Layer {
         youtube
         mail
     }
+    Export to Photos {
+        shape: person
+    }
 }
 
 Data {
@@ -325,6 +324,12 @@ Data {
         ghorg {
             shape: stored_data
         }
+        digikam {
+            shape: stored_data
+        }
+        piwigo {
+            shape: stored_data
+        } 
     }
     "invalid.node.lexikos.filesystem" {
         ArcaeaSongDatabase: "ArcaeaSongDatabase (x2)"
@@ -366,6 +371,12 @@ DAL: Data Access Layer {
         shape: package
         link: https://git.zx2c4.com/cgit/about/
     }
+    digikam {
+        shape: package
+    }
+    piwigo {
+        shape: package
+    }
 }
 
 Applications {
@@ -383,6 +394,9 @@ Applications {
     }
     "internal.git-ro" {
         link: http://git-ro.internal
+        shape: cloud
+    }
+    "invalid.domain-1.piwigo" {
         shape: cloud
     }
 }
@@ -450,3 +464,10 @@ Services."invalid.me.text" --> DEL."Sync On Edit (Git)"
 DEL."Sync On Edit (Git)" --> Data."com.github".logseq
 Data."com.github".logseq --> DAL.LogSeq
 DAL.LogSeq --> Applications.LogSeq
+
+Services."invalid.me.photos" --> DEL."Export Photos"
+DEL."Export Photos" --> Data."invalid.node.proximo.filesystem".digikam
+Data."invalid.node.proximo.filesystem".digikam --> Data."invalid.node.proximo.filesystem".piwigo
+Data."invalid.node.proximo.filesystem".digikam --> DAL.digikam
+Data."invalid.node.proximo.filesystem".piwigo --> DAL.piwigo
+DAL.piwigo --> Applications."invalid.domain-1.piwigo"
